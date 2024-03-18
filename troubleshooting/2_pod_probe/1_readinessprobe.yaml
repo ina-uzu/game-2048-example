@@ -1,0 +1,68 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: game-2048
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: game-2048
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: game-2048
+    spec:
+      containers:
+        - name: backend
+          # Replace with your docker registry info
+          image: krmp-d2hub-idock.9rum.cc/dev-test/repo_b9f868837c50:latest
+          ports:
+            - name: http
+              containerPort: 8080
+          # 파드가 요청을 처리할 준비가 되었는지를 판단하는 설정
+          # 이 h/c 실패하면 k8s는 해당 파드를 서비스에서 제외하고 다른 파드로 요청 전달
+          readinessProbe: 
+            httpGet:
+              path: /
+              port: 8081 # 잘못된 포트로 설정 
+            initialDelaySeconds: 30 # 처음 파드 올라올 때까지 기다릴 때 사용
+            periodSeconds: 10 # hc 주기 
+          resources:
+            requests:
+              cpu: 200m
+              memory: 100Mi
+            limits:
+              cpu: 300m
+              memory: 200Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: game-2048
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: game-2048
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: game-2048
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: game-2048
+            port:
+              number: 8080

@@ -1,13 +1,15 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: game-2048
 spec:
   rules:
-    - http:
-        paths:
-          - backend:
-              serviceName: game-2048
-              servicePort: 8080
-              path: /
-              pathType: Prefix
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: game-2048
+            port:
+              number: 8080
