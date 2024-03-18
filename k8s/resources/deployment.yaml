@@ -18,7 +18,7 @@ spec:
       containers:
         - name: backend
           # Replace with your docker registry info
-          image: idock.daumkakao.io/uzu_ina/2048-game
+          image: krmp-d2hub-idock.9rum.cc/dev-test/repo_369616ba90f1
           ports:
             - name: http
               containerPort: 8080
