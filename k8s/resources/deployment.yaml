@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: backend
-          # Replace the `<>` placeholders with your docker registry info
+          # Replace with your docker registry info
           image: idock.daumkakao.io/uzu_ina/2048-game
           ports:
             - name: http
